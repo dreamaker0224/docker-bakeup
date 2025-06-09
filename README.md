@@ -114,8 +114,73 @@ wget https://raw.githubusercontent.com/dreamaker0224/docker-bakeup/main/dr-site-
   "insecure-registries":["<drsite-ip>:5000"]
 }
 ```
+### 傳輸備份檔
+將以下兩行加入 crontab，即可實現定期同步備份檔
+```bash
+sudo /home/primal/registry_sync.sh
+rsync -av /home/primal/backup/* drsite@<drsite ip>:/home/drsite/backup/
+```
+### DNS 接管
+1. 使用 ngrok 將內網映射到公用 IP
+`ngrok http 8080`
+![image](https://github.com/user-attachments/assets/baf36ae8-c3e4-4345-9765-7427c4c4c50d)
 
 
+2. DNS_SERVER 接收來自 DRSITE 發送的訊號(一個檔案)
+
+```bash
+#!/bin/bash
+
+MAIN_HOST="10.107.13.83"
+DR_HOST="10.107.47.110"
+SERVICE_PORT=8080
+DNS_FLAG_FILE="/home/dnsserver/dns_request"
+TUNNEL_PORT=$SERVICE_PORT
+
+# 檢查是否已有現有 SSH Tunnel
+check_existing_tunnel() {
+    lsof -i TCP:$TUNNEL_PORT | grep ssh >/dev/null
+}
+
+# 清除現有的 SSH Tunnel
+kill_existing_tunnel() {
+    pkill -f "ssh -L $SERVICE_PORT"
+}
+
+# 使用 curl 檢查某個主機:PORT 是否可連
+check_curl() {
+    local HOST=$1
+    curl --silent --max-time 3 http://$HOST:$SERVICE_PORT >/dev/null
+    return $?
+}
+
+# 若 tunnel 存在則先清除
+if check_existing_tunnel; then
+    echo "移除現有的 SSH Tunnel..."
+    kill_existing_tunnel
+fi
+
+# 嘗試連接主站
+if check_curl $MAIN_HOST; then
+    echo "主站可連線，建立 MAIN_HOST tunnel"
+    ssh -L $SERVICE_PORT:$MAIN_HOST:$SERVICE_PORT -N -f primal@$MAIN_HOST
+    [ -f "$DNS_FLAG_FILE" ] && rm -f "$DNS_FLAG_FILE"
+else
+    if [ ! -f "$DNS_FLAG_FILE" ]; then
+        echo "主站無回應，檢查備援站..."
+        if check_curl $DR_HOST; then
+            echo "備援站可用，建立 DR_HOST tunnel"
+            ssh -L $SERVICE_PORT:$DR_HOST:$SERVICE_PORT -N -f drsite@$DR_HOST
+            touch "$DNS_FLAG_FILE"
+        else
+            echo "主站與備援站皆無回應，不執行任何 tunnel"
+        fi
+    else
+        echo "已經在備援狀態，主站仍不可用，不切換"
+    fi
+fi
+
+```
 
 
 ## References
