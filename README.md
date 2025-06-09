@@ -34,7 +34,8 @@
 ### 安裝
 執行以下指令進行安裝
 ```bash
-wget https://raw.githubusercontent.com/dreamaker0224/docker-bakeup/main/docker-bakeup-package
+wget https://raw.githubusercontent.com/dreamaker0224/docker-bakeup/main/docker-bakeup-package.tar.gz
+tar xzvf docker-bakeup-package.tar.gz
 cd docker-bakeup-package
 chmod +x install.sh
 sudo ./install.sh
