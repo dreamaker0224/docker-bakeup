@@ -1,6 +1,11 @@
 #!/bin/bash
 
-case "$1" in
+# docker-bakeup
+
+CMD="$1"
+shift  # 把 $1 拿掉，剩下的傳遞給真正的 script
+
+case "$CMD" in
   backup)
     /usr/local/bin/backup.sh "$@"
     ;;
