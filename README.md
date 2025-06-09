@@ -92,7 +92,28 @@ sudo docker-bakeup restore /home/justin/backup/docker/myprojet/20250609_190334 .
 ](https://github.com/Hikana/LSA2_CSF_POC)，為 POC 提供備份還原及，dr-site 同步的解決方案
 ### simple structure
 ![image](https://hackmd.io/_uploads/BykDcykQge.png)
+### 安裝 docker-bakeup
+在兩邊的 site 都安裝 docker-bakeup
+執行以下指令進行安裝
+```bash
+wget https://raw.githubusercontent.com/dreamaker0224/docker-bakeup/main/docker-bakeup-package.tar.gz
+tar xzvf docker-bakeup-package.tar.gz
+cd docker-bakeup-package
+chmod +x install.sh
+sudo ./install.sh
+```
+### registry sync
+在 primal site 下載 registry_sync.sh
+```bash
+wget https://raw.githubusercontent.com/dreamaker0224/docker-bakeup/main/dr-site-poc/registry_sync.sh
+```
 
+若無 https 則於 primal site 編輯 `/etc/docker/daemon.json`，在裡面加入：
+```bash
+{
+  "insecure-registries":["<drsite-ip>:5000"]
+}
+```
 
 
 
