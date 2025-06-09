@@ -105,7 +105,7 @@ sudo ./install.sh
 ### registry sync
 在 primal site 下載 registry_sync.sh
 ```bash
-wget https://raw.githubusercontent.com/dreamaker0224/docker-bakeup/main/dr-site-poc/registry_sync.sh
+wget https://raw.githubusercontent.com/dreamaker0224/docker-bakeup/main/dr-stie-poc/registry_sync.sh
 ```
 
 若無 https 則於 primal site 編輯 `/etc/docker/daemon.json`，在裡面加入：
