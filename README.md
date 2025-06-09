@@ -2,7 +2,7 @@
 
 目前在網路上有針對 container 的備份工具，也有針對整個 VM 或是系統的備份工具，但鮮少看到有針對 Docker Compose 的備份工具，故此工具是一個針對 Docker Compose 專案的備份還原工具，專為使用 Btrfs 檔案系統的環境設計。此工具可自動備份整個專案結構、Volumes 與 Bind Mounts，並能輕鬆還原至指定狀態，希望能在特定情況幫助到別人。
 ## 系統需求
-
+- OS 需為 Linux
 - 檔案系統需為 **Btrfs**。
     - 或是需備份的資料夾所在為 **Btrfs** (docker 所在資料夾、專案所在資料夾、volumes 所在資料夾)
     - 將 docker 資料夾做成 btrfs 可參考 [BTRFS storage driver](https://docs.docker.com/engine/storage/drivers/btrfs-driver/)
