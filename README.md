@@ -31,7 +31,14 @@
 * `volumes/`：以 volume 名稱為資料夾名，包含 volume 的完整內容。
 
 ## 使用方式
-
+### 安裝
+執行以下指令進行安裝
+```bash
+wget https://raw.githubusercontent.com/dreamaker0224/docker-bakeup/main/docker-bakeup-package
+cd docker-bakeup-package
+chmod +x install.sh
+sudo ./install.sh
+```
 ### 備份
 請先啟動 docker registry：
 ```bash
