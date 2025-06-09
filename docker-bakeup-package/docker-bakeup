@@ -1,0 +1,15 @@
+#!/bin/bash
+
+case "$1" in
+  backup)
+    /usr/local/bin/backup.sh "$@"
+    ;;
+  restore)
+    /usr/local/bin/restore.sh "$@"
+    ;;
+  *)
+    echo "用法: docker-bakeup {backup|restore} [options]"
+    exit 1
+    ;;
+esac
+
