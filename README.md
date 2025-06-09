@@ -65,7 +65,7 @@ sudo docker-bakeup backup <project path>
 
 ### 還原
 
-執行以下指令並指定要還原的備份資料夾（timestamp 資料夾）到指定的資料夾底下，未指定則為當前資料夾：
+執行以下指令並指定要還原的備份資料夾（timestamp 資料夾，請輸入絕對路徑）到指定的資料夾底下，未指定則為當前資料夾：
 
 ```bash
 sudo docker-bakeup restore <backup path timestamp> <restore path>
