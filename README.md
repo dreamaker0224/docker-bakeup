@@ -45,42 +45,47 @@ docker run -d -p 5000:5000 --restart always --name registry registry:2
 
 此工具應其 tag 功能以及增量特性，作為 image 備份管理的主要媒介
 
-請在 Docker Compose 專案目錄下執行以下指令：
+備份專案時執行以下指令 (project path 底下需要包含 docker-compose.yaml)：
 
 ```bash
-sudo ./backup.sh
+sudo docker-bakeup backup <project path>
 ```
 
 此指令會自動：
-
-* 偵測專案名稱
-* 匯出 `docker-compose.yaml`
-* 備份專案檔案、bind mounts、以及 volumes
-* 儲存至 `/home/<username>/backup/docker/<project name>/<timestamp>/`
+- 偵測專案名稱
+- 備份專案檔案、bind mounts、以及 volumes
+- 儲存至 `/home/<username>/backup/docker/<project name>/<timestamp>/`
 
 ### 還原
 
-執行以下指令並指定要還原的備份資料夾（timestamp 資料夾）：
+執行以下指令並指定要還原的備份資料夾（timestamp 資料夾）到指定的資料夾底下，未指定則為當前資料夾：
 
 ```bash
-sudo ./restore.sh /home/<username>/backup/docker/<project name>/<timestamp>
+sudo docker-bakeup restore <backup path timestamp> <restore path>
 ```
-
-還原後會將資料放置於：
-
-```
-/home/<username>/project/<project name>/
-```
-
-接著即可啟動服務：
-
+範例：
+以下指令即會復原到 home 目錄下 Downloads 資料夾底下
 ```bash
-cd /home/<username>/project/<project name>/
+sudo docker-bakeup restore /home/justin/backup/docker/myprojet/20250609_190334 ./Downloads
 ```
+還原會還原以下：
+- 整個專案資料夾，包括 docker-compose.yaml
+- volumes 
+- bind mounts (若位置非 btrfs 則無法還原，需手動操作)
+- image
+    - image 會從 registry pull 下來，並重新 tag 為 docker-compose 的 image 內容
 
 
-- **simple structure**
+接著即可使用 `docker compose up` 重新啟動服務
+
+
+## docker-bakeup for dr-site demo
+共同合作的專題為 [LSA2_CSF_POC
+](https://github.com/Hikana/LSA2_CSF_POC)，為 POC 提供備份還原及，dr-site 同步的解決方案
+### simple structure
 ![image](https://hackmd.io/_uploads/BykDcykQge.png)
+
+
 
 
 
